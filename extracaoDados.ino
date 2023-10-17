@@ -9,8 +9,8 @@ void setup() {
   mpu.initialize(); // Inicializa a MPU-6050
 
   // Configuração do acelerômetro e do giroscópio
-  mpu.setFullScaleGyroRange(MPU6050_GYRO_FS_250);
-  mpu.setFullScaleAccelRange(MPU6050_ACCEL_FS_2);
+  mpu.setFullScaleGyroRange(0);  // ±250 °/s
+  mpu.setFullScaleAccelRange(0); // ±2g
 
   // Inicia a comunicação serial
   Serial.println("MPU-6050 Inicializado!");
@@ -21,30 +21,22 @@ void loop() {
   int16_t acX, acY, acZ, temp, gyroX, gyroY, gyroZ;
   mpu.getMotion6(&acX, &acY, &acZ, &gyroX, &gyroY, &gyroZ);
 
-  // Converte os dados em valores em fração de gravidade (g)
-  float acX_g = (float)acX / 16384.0;
-  float acY_g = (float)acY / 16384.0;
-  float acZ_g = (float)acZ / 16384.0;
+  // Exibe os valores brutos no monitor serial
+  Serial.print("Acelerômetro (raw): ");
+  Serial.print(acX);
+  Serial.print(" , ");
+  Serial.print(acY);
+  Serial.print(" , ");
+  Serial.print(acZ);
+  Serial.println();
 
-  // Converte os dados em valores em graus por segundo (°/s)
-  float gyroX_deg_per_s = (float)gyroX / 131.0;
-  float gyroY_deg_per_s = (float)gyroY / 131.0;
-  float gyroZ_deg_per_s = (float)gyroZ / 131.0;
-
-  // Exibe os valores no monitor serial
-  Serial.print("Acelerômetro (g): ");
-  Serial.print(acX_g);
+  Serial.print("Giroscópio (raw): ");
+  Serial.print(gyroX);
   Serial.print(" , ");
-  Serial.print(acY_g);
+  Serial.print(gyroY);
   Serial.print(" , ");
-  Serial.println(acZ_g);
-
-  Serial.print("Giroscópio (°/s): ");
-  Serial.print(gyroX_deg_per_s);
-  Serial.print(" , ");
-  Serial.print(gyroY_deg_per_s);
-  Serial.print(" , ");
-  Serial.println(gyroZ_deg_per_s);
+  Serial.print(gyroZ);
+  Serial.println();
 
   delay(1000); // Aguarda um segundo antes de ler novamente
 }
